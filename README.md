@@ -1,4 +1,4 @@
-To run this powershell warmup tool, you will be running the SiteWarmup.ps1 file. To run this, you can simply right click, Run with Powershell.
+To run this powershell warmup tool, you will be running the SiteWarmup.ps1 file. To run this, you can simply right click, Run with Powershell - or you can run from Powershell ISE. We will talk about this more under the Recommended Setup section, but you should set this script up to run on a scheduled task so it is self-managed.
 
 The process will write to a spreadsheet (log.csv) which will contain a list of all of the URLs it has warmed up so far. It will also display erroring pages so you can determine if your sitemap.xml contains 404 errors, 500 errors, etc. This process will also write to a status.txt file which shows the current status of the warmup process (how far along it is). You should not open these files with an editor (excel, notepad) while the warmup process is running - as you might get an error about the file being in use from the powershell script. To view these files, open them with your web browser.
 
