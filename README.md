@@ -1,6 +1,3 @@
-# SiteWarmup
-Multithreaded warmup tool that runs off a sitemap.xml file
-
 # Configuration
 The SiteWarmup.ps1 file is the script you will run to start the warmup process
 
