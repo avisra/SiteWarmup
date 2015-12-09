@@ -25,5 +25,6 @@ This tool alone is not going to make your Sitefinity site fast. Use this checkli
 1. Output cache settings
 2. PageRouteHandler optimizations for Output Cache
 3. Precompilation
+4. Global.asax.cs issues
 
 # Considerations
