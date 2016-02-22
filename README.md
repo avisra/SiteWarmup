@@ -15,6 +15,8 @@ I've created two versions of the master script file. OvernightProcess.cmd and Ov
 
 Make sure you edit the OvernightProcess script to include the values applicable to your project. If the comments are not clear enough, please let me know and I'll clarify.
 
+The script makes use of the Sitefinity Precompiler tool. You can read about and download this from here: http://docs.sitefinity.com/for-developers-sitefinity-precompiler-tool
+
 #Considerations
 
 This is not a one-size-fits-all solution. Unfortunately, each project is different. If you make changes weekly, then it doesn't make sense for you to run the Precompiler nightly - you should separate it from the site warmup portion (so precompilation happens weekly and site warmup still happens nightly).
