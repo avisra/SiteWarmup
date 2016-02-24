@@ -42,4 +42,4 @@ By default, .NET also varies by all params (query strings and posted parameters)
 
 ##### Global.asax.cs issues
 
-There is an issue .NET with having an empty Session_Start method in your Global.asax. cs file. This empty method causes a session to get generated. This can cause issues with compatibility with CDN's and can also cause OutputCache to be invalidated. **It is recommended to remote or comment all empty methods in your Global.asax.cs**
+There is an issue .NET with having an empty Session_Start method in your Global.asax. cs file. This empty method causes a session to get generated. This can cause issues with compatibility with CDN's and can also cause OutputCache to be invalidated. **It is recommended to remove or comment all empty methods in your Global.asax.cs**
