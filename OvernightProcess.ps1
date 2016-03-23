@@ -1,6 +1,6 @@
 $MyDir = Split-Path $MyInvocation.MyCommand.Definition
 
-$precompilerFile = "C:\Users\woodard\Desktop\Performance\SiteWarmup\Telerik.Sitefinity.Compiler.1.0.0.10\Telerik.Sitefinity.Compiler.exe"
+$precompilerFile = "$MyDir\Telerik.Sitefinity.Compiler.1.0.0.10\Telerik.Sitefinity.Compiler.exe"
 & $precompilerFile /url="http://localhost:5080" /appdir="C:\Projects\dag-sitefinity-website\SitefinityWebApp" /authKey="L2737ln9EieQG7T0uaWdGT5J00jRNdgl" /strategy="Frontend"
 
 # Please note, if you have Overlapped Recycles turned on in IIS, the application will
