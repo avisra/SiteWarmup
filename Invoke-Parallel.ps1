@@ -182,8 +182,7 @@ function Invoke-Parallel {
         [validatescript({Test-Path (Split-Path $_ -parent)})]
             [string]$LogFile = "C:\temp\log.log",
 			
-        [validatescript({Test-Path (Split-Path $_ -parent)})]
-            [string]$ProgressFile = "C:\temp\log.log",			
+            [string]$ProgressFile,			
 
 			[switch] $Quiet = $false
     )

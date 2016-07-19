@@ -1,8 +1,9 @@
 # sitemapFile - location of the XML Sitemap
 # statusFile - location of the status file. Progress is written here. Place somewhere in website root so you can open using a web browser to see current status. If empty, placed in same folder as this script
 # logFile - location of the log file. All URLs are logged here with their HTTP status code and response time. Recommend placing in App_Data. If empty, placed in same folder as this script
+# instance - this is the instance ID in the azure scaled app
 
-param([String]$sitemapFile, [String]$statusFile, [String]$logFile)
+param([String]$sitemapFile, [String]$statusFile, [String]$logFile, [String]$instance)
 
 # Multi-threading library
 $MyDir = Split-Path $MyInvocation.MyCommand.Definition
@@ -13,6 +14,14 @@ $startTime = Get-Date
 if([string]::IsNullOrEmpty($logFile)) { $logFile = "$MyDir\log.csv" }
 if([string]::IsNullOrEmpty($statusFile)) { $statusFile = "$MyDir\status.txt" }
 
+if(-Not ([string]::IsNullOrEmpty($instance))) {
+    $originalStatusFile = $statusFile
+    $originalLogFile = $logFile
+    
+    $statusFile = $originalStatusFile -f $instance
+    $logFile = $originalLogFile -f $instance
+}
+
 if(Test-Path $statusFile) {
     Clear-Content $statusFile
 }
@@ -22,6 +31,7 @@ $pages = @()
 # Collect page urls for processing
 ""
 "Collecting page urls..."
+
 [xml]$xml = Get-Content $sitemapFile -ReadCount 0
 foreach ($urlCollection in $xml.urlset.url)
 {
@@ -42,9 +52,12 @@ foreach ($urlCollection in $xml.urlset.url)
 }
 
 "Sitemap count:" + $pages.Count
+if(-Not ([string]::IsNullOrEmpty($instance))) {
+    "Running warmup with instance id:" + $instance
+}
 ""
 
-$pages | Invoke-Parallel -LogFile $logFile -ProgressFile $statusFile {
+$pages | Invoke-Parallel -LogFile $logFile -ProgressFile $statusFile -Quiet -ImportVariables {
 
     $url = $_
     
@@ -55,9 +68,21 @@ $pages | Invoke-Parallel -LogFile $logFile -ProgressFile $statusFile {
     $request.CachePolicy = New-Object System.Net.Cache.HttpRequestCachePolicy([System.Net.Cache.HttpRequestCacheLevel]::NoCacheNoStore)
     $request.UserAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::Chrome
     
+    if(-Not ([string]::IsNullOrEmpty($instance))) {
+        $target = [System.Uri]$url
+        $request.CookieContainer = New-Object System.Net.CookieContainer
+        $instanceCookie = New-Object System.Net.Cookie "ARRAffinity", $instance
+        $request.CookieContainer.Add($target.GetLeftPart([System.UriPartial]'Authority'), $instanceCookie)
+    }    
+    
     [System.Net.HttpWebResponse] $response = $request.GetResponse()
     $response.Close()
 
+}
+
+if(-Not ([string]::IsNullOrEmpty($instance))) {
+    $statusFile = $originalStatusFile
+    $logFile = $originalLogFile
 }
 
 "Warmup completed"
