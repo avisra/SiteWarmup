@@ -13,7 +13,9 @@ $startTime = Get-Date
 if([string]::IsNullOrEmpty($logFile)) { $logFile = "$MyDir\log.csv" }
 if([string]::IsNullOrEmpty($statusFile)) { $statusFile = "$MyDir\status.txt" }
 
-$null | out-file $statusFile
+if(Test-Path $statusFile) {
+    Clear-Content $statusFile
+}
     
 $pages = @()
 
@@ -26,14 +28,14 @@ foreach ($urlCollection in $xml.urlset.url)
     if($urlCollection.link -eq $null)
     {
         # No language variation, just use the default location
-        $pages += $urlCollection.loc
+        $pages += $urlCollection.loc.ToLower()
 
     } else {
 
         # Loop through all language variations
         foreach ($link in $urlCollection.link)
         {
-            $pages += $link.ref
+            $pages += $link.href.ToLower()
         }
 
     }
@@ -58,4 +60,4 @@ $pages | Invoke-Parallel -LogFile $logFile -ProgressFile $statusFile {
 
 }
 
-Write-Host "Warmup completed"  -ForegroundColor "magenta"
+"Warmup completed"

@@ -7,31 +7,33 @@ param([String]$url="http://localhost", [String]$successOuput="SUCCESS", [Int32]$
 $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
 
 $statusUrl = ($url + "/appstatus")
-""
-Write-Host ("Attempt to start Sitefinity up: " + $statusUrl)
-$retryCount = 0;
 
+""
+"Attempt to start Sitefinity up: " + $statusUrl
+
+$retryCount = 0;
+$progressPreference = 'silentlyContinue'
 try 
 { 
-  Write-Host ("Retry: " + $retryCount)
+  "Retry: " + $retryCount
   $retryCount++;
   $response = Invoke-WebRequest $statusUrl -TimeoutSec 1800 -UseBasicParsing
 
   if($response.StatusCode -eq 200)
   {
-    Write-Host ("Sitefinity is starting ..." + $statusUrl)
+    "Sitefinity is starting ..." + $statusUrl
   }  
 
   while($response.StatusCode -eq 200)
   {    
-    Write-Host ("Checking Sitefinity status: " + $statusUrl)
-	Write-Host ("Retry: " + $retryCount)
+    "Checking Sitefinity status: " + $statusUrl
+	"Retry: " + $retryCount
 	$retryCount++;
     $response = Invoke-WebRequest $statusUrl -TimeoutSec 1800 -UseBasicParsing
 
     if($elapsed.Elapsed.Minites > $totalWaitMinutes)
     {
-	  Write-Warning ("Sitefinity did NOT start in the specified maximum time")
+	  "Sitefinity did NOT start in the specified maximum time"
       break
     }
 
@@ -46,18 +48,18 @@ catch
 
     if($response.StatusCode -eq 200)
     {
-      Write-Host ("Sitefinity has started after " + $elapsed.Elapsed.Seconds + " second(s) - " + $successOuput) -ForegroundColor "green"
+      "Sitefinity has started after " + $elapsed.Elapsed.Seconds + " second(s) - " + $successOuput
     }
     else
     {
-      Write-Error "Sitefinity failed to start"
+      "Sitefinity failed to start"
     }
   }
   else
   {
-    Write-Error ("Sitefinity failed to start - StatusCode: " + $_.Exception.Response.StatusCode.Value__)
+    "Sitefinity failed to start - StatusCode: " + $_.Exception.Response.StatusCode.Value__
 	
-    Write-Host $_|format-list -force
-	  Write-Host $_.Exception|format-list -force
+    $_|format-list
+	$_.Exception|format-list
   }
 }
