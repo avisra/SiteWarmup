@@ -17,11 +17,20 @@ Make sure you edit the OvernightProcess script to include the values applicable 
 
 The script makes use of the Sitefinity Precompiler tool. You can read about and download this from here: http://docs.sitefinity.com/for-developers-sitefinity-precompiler-tool
 
-#Considerations
+# Considerations
 
 This is not a one-size-fits-all solution. Unfortunately, each project is different. If you make changes weekly, then it doesn't make sense for you to run the Precompiler nightly - you should separate it from the site warmup portion (so precompilation happens weekly and site warmup still happens nightly).
 
 *The more sitemap pages you have, the longer the precompiler will take to run. Ultimate timing will depend on your CPU performance. For me, I can precompile a 3000 page site (sitemap pages, not URLs) in 20 minutes.*
+
+##### Sitemap Generation
+
+This warmup tools runs on a XML sitemap. I usually recommend users to utilize the Sitemap Generator tool within Sitefinity for this. This tool uses Sitefinity's content location service to identify where content lives within the site. If you have built your own custom widgets, you need to write your own code to tell the content location service that your widget serves a specific type of content - so that it gets picked up by the Sitemap Generator tool. 
+
+* Here is some documentation on this: http://docs.sitefinity.com/for-developers-register-content-location-with-your-custom-widgets
+* If you prefer code samples, take a look at the Feather github repository. In the case of News, look at the NewsController here: https://github.com/Sitefinity/feather-widgets/blob/master/Telerik.Sitefinity.Frontend.News/MVC/Controllers/NewsController.cs. It implements the IContentLocatableView interface with the GetLocations() method. This GetLocations method is getting the locations from the Model, here: https://github.com/Sitefinity/feather/blob/476361c219ba974f45a4fc3f4fee409ec6e9ea51/Telerik.Sitefinity.Frontend/Mvc/Models/ContentModelBase.cs. This should give you everything you need to be able to implement this in your own custom widgets.
+
+*If you don't tell the content location service that your widget servers a type of content, and you don't manually place them in your sitemap.xml file - they will not be warmed up by this process - and that may lead to poor performance.*
 
 # Recommended optimizations
 
