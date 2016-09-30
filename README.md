@@ -32,6 +32,23 @@ This warmup tools runs on a XML sitemap. I usually recommend users to utilize th
 
 *If you don't tell the content location service that your widget servers a type of content, and you don't manually place them in your sitemap.xml file - they will not be warmed up by this process - and that may lead to poor performance.*
 
+##### Cache dependencies
+
+Sitefinity's out of the box widgets all implement cache dependencies. These tell pages to invalidate their cache when specific content is updated. For example, you have a News page with a News widget. If you were to go update a news item in the system, it would automatically invalidate that page's cache so it shows the new content.
+
+Many developers forget to implement cache dependencies in their custom widgets. So they run into issues where the new content isn't showing up when its published. They often resort to turning cache off on the page because of the issue. This is a big **no-no**. The correct solution to this, is to implement cache dependencies in your custom widgets! It's super easy.
+
+There is no Feather-based documentation on this. But that is okay, because Feather is open-sourced. Read below to understand how to implement your own cache dependencies.
+
+1. Look at this code in the Feather github repo: https://github.com/Sitefinity/feather-widgets/blob/master/Telerik.Sitefinity.Frontend.News/MVC/Controllers/NewsController.cs
+2. Look at the Index action. There is a AddCacheDependencies method being called (index is the list view - so it binds to the news content type so any time news is created/updated/deleted, it notifies the page this widget is on). This method looks for a list of CacheDependencyKey(s). 
+3. You can see how Sitefinity generates it list here: https://github.com/Sitefinity/feather/blob/476361c219ba974f45a4fc3f4fee409ec6e9ea51/Telerik.Sitefinity.Frontend/Mvc/Models/ContentModelBase.cs
+4. Look at this method: GetKeysOfDependentObjects(ContentListViewModel viewModel)
+5. That method is creating a list with a single object. The object has a key, which is empty - and a content type, which is set to News.
+6. If this were a news detail view, we would use the other GetKeysOfDependentObjectsMethod - which still has a single object in the list. But this time, it has a key - which is the ID of the news item.
+
+With this knowledge, you should be able to write basic cache dependencies into your own widgets
+
 # Recommended optimizations
 
 This tool alone is not going to make your Sitefinity site fast. Use this checklist as a good way to secure your performance:
