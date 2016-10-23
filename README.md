@@ -11,7 +11,7 @@ These scripts were created with Sitefinity sites in mind. By default, Sitefinity
 
 # How this tool works
 
-I've created two versions of the master script file. OvernightProcess.cmd and OvernightProcess.ps1. They both do the same thing. For those of you using Azure Websites, you will need to use the .cmd file with Web Jobs instead of Scheduled Tasks. For those with remote access to the server, you can use the Task Scheduler in Windows and create a task for the OvernightProcess.ps1 file. Make sure the task runs with Administrator permissions.
+For those with remote access to the server, you can use the Task Scheduler in Windows and create a task for the OvernightProcess.ps1 file. Make sure the task runs with Administrator permissions. For those of you using Azure Websites, you will need to use the AzureScaledSiteWarmup branch with Web Jobs instead of Scheduled Tasks.
 
 Make sure you edit the OvernightProcess script to include the values applicable to your project. If the comments are not clear enough, please let me know and I'll clarify.
 
